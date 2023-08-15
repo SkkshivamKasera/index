@@ -57,3 +57,8 @@ async function sendVideoWithCaption(ctx, videoId, caption) {
 
 // Start the bot
 bot.launch();
+
+console.log("Bot is running...");
+
+// Keep the process running indefinitely
+setInterval(() => {}, 86400000); 
