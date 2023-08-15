@@ -1,11 +1,8 @@
 import { Telegraf } from 'telegraf';
 import axios from 'axios';
 
-// Set your Telegram bot token here
-const TELEGRAM_BOT_TOKEN = '6418563359:AAEO4WdB-ksRAfFlX9GC-d9bzrG6HnrYbBc';
-
 // Initialize the Telegram bot
-const bot = new Telegraf(TELEGRAM_BOT_TOKEN);
+const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN);
 
 // Global object to store the new caption text provided by users for each video
 const videoReplacementTexts = {};
