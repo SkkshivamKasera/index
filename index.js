@@ -1,9 +1,10 @@
 import { Telegraf } from 'telegraf';
 import axios from 'axios';
+import express from 'express'
 
 // Initialize the Telegram bot
-const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN);
-
+const bot = new Telegraf("6418563359:AAEO4WdB-ksRAfFlX9GC-d9bzrG6HnrYbBc");
+const app = express()
 // Global object to store the new caption text provided by users for each video
 const videoReplacementTexts = {};
 
@@ -52,10 +53,14 @@ async function sendVideoWithCaption(ctx, videoId, caption) {
     }
 }
 
-// Start the bot
-bot.launch();
+app.get('/start-bot', (req, res) => {
+    // Start the bot
+    bot.launch();
+    res.send('Bot is starting...');
+});
 
-console.log("Bot is running...");
-
-// Keep the process running indefinitely
-setInterval(() => {}, 86400000); 
+// Start the HTTP server
+const PORT = process.env.PORT || 3000; // Use the specified port or default to 3000
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+});
