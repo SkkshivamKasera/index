@@ -40,9 +40,9 @@ async function sendVideoWithCaption(ctx, videoId, caption) {
 }
 
 async function startBot() {
+    botStarted = true
     if (!botStarted) {
         bot.launch();
-        botStarted = true
         console.log('Bot is starting...');
     } else {
         console.log('Bot is already running...');
@@ -59,7 +59,7 @@ function stopBot() {
     }
 }
 
-app.get('/', (req, res) => {
+app.get('/start', (req, res) => {
     startBot();
     res.send('Bot starting...');
 });
