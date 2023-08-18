@@ -63,28 +63,43 @@ async function handleUpdates() {
     }
 }
 
-if (!bot.isPolling()) {
-    // Start the bot
-    bot.launch();
-    // Start the process to fetch updates
-    setInterval(handleUpdates, 5000); // Fetch updates every 5 seconds
-    res.send('Bot and updates fetcher are starting...');
-} else {
-    res.send('Bot and updates fetcher are already running.');
-}
+let updateInterval;
 
-app.get('/start-bot', (req, res) => {
-    // Start the bot
+// Function to start the bot and fetch updates
+async function startBot() {
     if (!bot.isPolling()) {
         // Start the bot
         bot.launch();
-        // Start the process to fetch updates
-        setInterval(handleUpdates, 5000); // Fetch updates every 5 seconds
-        res.send('Bot and updates fetcher are starting...');
+        console.log('Bot is starting...');
+
+        // Start fetching updates at regular intervals
+        updateInterval = setInterval(handleUpdates, 5000); // Fetch updates every 5 seconds
     } else {
-        res.send('Bot and updates fetcher are already running.');
+        console.log('Bot is already running.');
     }
+}
+
+// Function to stop the bot and polling
+function stopBot() {
+    if (bot.isPolling()) {
+        bot.stop();
+        clearInterval(updateInterval); // Clear the interval
+        console.log('Bot and polling stopped.');
+    } else {
+        console.log('Bot is not running.');
+    }
+}
+
+app.get('/', (req, res) => {
+    startBot();
+    res.send('Bot starting...');
 });
+
+app.get('/stop', (req, res) => {
+    stopBot();
+    res.send('Bot stopping...');
+});
+
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
