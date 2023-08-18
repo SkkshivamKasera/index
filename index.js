@@ -64,31 +64,44 @@ async function handleUpdates() {
 }
 
 let updateInterval;
+let botStarted = false
 
 // Function to start the bot and fetch updates
-async function startBot() {
-    if (!bot.isPolling()) {
-        // Start the bot
+async function startBot(ctx) {
+    if (!botStarted) {
         bot.launch();
+        botStarted = true
         console.log('Bot is starting...');
-
-        // Start fetching updates at regular intervals
-        updateInterval = setInterval(handleUpdates, 5000); // Fetch updates every 5 seconds
+        updateInterval = setInterval(handleUpdates, 5000);
     } else {
-        console.log('Bot is already running.');
+        ctx.reply('Bot is already running...')
+        console.log('Bot is already running...');
     }
 }
 
 // Function to stop the bot and polling
-function stopBot() {
-    if (bot.isPolling()) {
+function stopBot(ctx) {
+    if (botStarted) {
         bot.stop();
+        botStarted = false
         clearInterval(updateInterval); // Clear the interval
+        ctx.reply('Bot and polling stopped...')
         console.log('Bot and polling stopped.');
     } else {
+        ctx.reply('Bot is not running.')
         console.log('Bot is not running.');
     }
 }
+
+if(!botStarted){
+    bot.launch()
+    botStarted=true
+}
+
+bot.command('start', (ctx)=>{
+    startBot(ctx)
+})
+bot.command('stop', (ctx)=>stopBot(ctx))
 
 app.get('/', (req, res) => {
     startBot();
