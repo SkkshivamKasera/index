@@ -59,11 +59,6 @@ function stopBot() {
     }
 }
 
-if(!botStarted){
-    bot.launch()
-    botStarted=true
-}
-
 app.get('/', (req, res) => {
     startBot();
     res.send('Bot starting...');
