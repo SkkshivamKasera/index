@@ -53,14 +53,40 @@ async function sendVideoWithCaption(ctx, videoId, caption) {
     }
 }
 
-app.get('/start-bot', (req, res) => {
+async function handleUpdates() {
+    try {
+        const updates = await bot.telegram.getUpdates();
+        // Process the updates here
+        console.log('Received updates:', updates);
+    } catch (error) {
+        console.error('Error fetching updates:', error);
+    }
+}
+
+if (!bot.isPolling()) {
     // Start the bot
     bot.launch();
-    res.send('Bot is starting...');
+    // Start the process to fetch updates
+    setInterval(handleUpdates, 5000); // Fetch updates every 5 seconds
+    res.send('Bot and updates fetcher are starting...');
+} else {
+    res.send('Bot and updates fetcher are already running.');
+}
+
+app.get('/start-bot', (req, res) => {
+    // Start the bot
+    if (!bot.isPolling()) {
+        // Start the bot
+        bot.launch();
+        // Start the process to fetch updates
+        setInterval(handleUpdates, 5000); // Fetch updates every 5 seconds
+        res.send('Bot and updates fetcher are starting...');
+    } else {
+        res.send('Bot and updates fetcher are already running.');
+    }
 });
 
-// Start the HTTP server
-const PORT = process.env.PORT || 3000; // Use the specified port or default to 3000
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
