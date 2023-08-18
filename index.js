@@ -40,7 +40,6 @@ async function sendVideoWithCaption(ctx, videoId, caption) {
 }
 
 async function startBot() {
-    botStarted = true
     if (!botStarted) {
         bot.launch();
         console.log('Bot is starting...');
